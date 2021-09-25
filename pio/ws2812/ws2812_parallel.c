@@ -114,8 +114,8 @@ const struct {
         {pattern_random,  "Random data"},
         {pattern_sparkle, "Sparkles"},
         {pattern_greys,   "Greys"},
-//        {pattern_solid,  "Solid!"},
-//        {pattern_fade, "Fade"},
+        {pattern_solid,  "Solid!"},
+        {pattern_fade, "Fade"},
 };
 
 #define VALUE_PLANE_COUNT (8 + FRAC_BITS)
