@@ -1,36 +1,94 @@
 #include "pico/stdlib.h"
 #include "led_matrix.h"
+#include "led_ring_dots.h"
 
 uint32_t image[ROWS][COLUMNS];
 uint32_t flattened_data[ROWS * COLUMNS];
 
 
-
-void init_test_image()
+void init_blank_image()
 {
-    bool light_row = true;
-
     for(int i = 0; i < ROWS; i++)
     {
-        if(light_row)
+        for(int j = 0; j < COLUMNS; j++)
         {
-            for(int j = 0; j < COLUMNS; j++)
-            {
-                image[i][j] = 0xffffff;
-            }
-        } else {
-            for (int j = 0; j < COLUMNS; j++)
-            {
-                image[i][j] = 0;
-            }
+            image[i][j] = 0;
         }
-
-        light_row = !light_row;
     }
 }
 
-// transfer data from image matrix to flattened
-// array 
+
+void init_test_image()
+{
+    uint32_t pixel = 0xffffff;
+
+    for(int i = 0; i < ROWS; i++)
+    {
+        for(int j = 0; j < COLUMNS; j++)
+        {
+            image[i][j] = pixel >> (j * 2);
+        }
+    }
+}
+
+void init_test_image_diagonal()
+{
+    static Colour start = RED;
+    static Colour finish = BLUE;
+
+    static uint8_t start_row = 0;
+    static uint8_t finish_row = 31;
+
+    Colour pixel;
+    Colour increment;
+
+    for (int j = 0; j < COLUMNS; j++)
+    {
+        increment.red = (finish.red - start.red) / ROWS;
+        increment.green = (finish.green - start.green) / ROWS;
+        increment.blue = (finish.blue - start.blue) / ROWS;
+
+        for(int i = start_row; i < ROWS; i++)
+        {
+            pixel.red = (increment.red * (i - start_row)) + start.red;
+            pixel.green = (increment.green * (i - start_row)) + start.green;
+            pixel.blue = (increment.blue * (i - start_row)) + start.blue;
+
+            image[i][j] = (uint32_t)((pixel.green) << 16) |
+                        (uint32_t)((pixel.red) << 8) |
+                        (uint32_t)((pixel.blue));
+
+        }
+
+        for (int i = 0; i < start_row + 1; i++)
+        {
+            pixel.red = (increment.red * i) + start.red;
+            pixel.green = (increment.green * i) + start.green;
+            pixel.blue = (increment.blue * i) + start.blue;
+
+            image[(start_row) - i][j] = (uint32_t)((pixel.green) << 16) |
+                        (uint32_t)((pixel.red) << 8) |
+                        (uint32_t)((pixel.blue));
+        }      
+    }
+    if(start_row < ROWS)
+    {
+        start_row++;
+    } else {
+        start_row = 0;
+        Colour temp = start;
+        start = finish;
+        finish = temp;
+    }
+
+    if(finish_row < ROWS)
+    {
+        finish_row++;
+    } else {
+        finish_row = 0;
+    }
+}
+
 void prepare_data_for_panel()
 {
     bool flip_row = true;
@@ -43,12 +101,12 @@ void prepare_data_for_panel()
         {
             for(int j = COLUMNS - 1; j > -1; j--)
             {
-                flattened_data[(i * (COLUMNS - 1)) + i + j] = image[i][j];
+                flattened_data[(i * (COLUMNS - 1)) + i + j] = image[i][(COLUMNS - 1) - j];
             }
         } else {
             for(int j = 0; j < COLUMNS; j++)
             {
-                flattened_data[(i * (COLUMNS - 1)) + i + j] = image[i][j];
+                flattened_data[(i * COLUMNS) + j] = image[i][j];
             }
 
         }

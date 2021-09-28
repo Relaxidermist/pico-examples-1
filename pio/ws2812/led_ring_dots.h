@@ -4,8 +4,8 @@
 #define NUMBER_OF_LEDS 24
 #define NUMBER_OF_DOTS 4
 #define RED     {255,0,0}
-#define GREEN   {0,255,0}
-#define BLUE    {0,0,255}
+#define BLUE   {0,255,0}
+#define GREEN    {0,0,255}
 
 const float leds_per_radian;
 
