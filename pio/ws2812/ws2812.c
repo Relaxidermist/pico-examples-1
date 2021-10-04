@@ -52,8 +52,8 @@ int main() {
 
     while (1) {
         //squares_image();
-        test_image_horizontal();
-        //test_image_vertical();
+        //test_image_horizontal();
+        test_image_vertical();
         prepare_data_for_screen();
         write_panel();
         sleep_ms(10);

@@ -158,13 +158,13 @@ void prepare_data_for_panel2(int panel_no)
 
     for (int i = 0; i < ROWS_PANEL; i++)
     {
-        flip_row = false;
+        flip_row = !flip_row;
 
         if(flip_row)
         {   
-            for(int j = col_offset; j < (col_offset + COLUMNS_PANEL); j++)
+            for(int j = 0; j < COLUMNS_PANEL; j++)
             {
-                flattened_data[(i * (COLUMNS_PANEL - 1)) + i + j] = image[i][(COLUMNS_PANEL - 1) - j];
+                flattened_data[(i * (COLUMNS_PANEL) + ((COLUMNS_PANEL - 1) - j) + offset)] = image[i][j + col_offset];
             }
             
         } else {
