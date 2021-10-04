@@ -16,6 +16,18 @@ typedef struct {
 } Colour;
 
 typedef struct {
+        uint8_t x;
+        uint8_t y;
+} Position;
+
+typedef struct {
+        uint8_t height;
+        uint8_t width;
+        Position origin;
+        Colour colour;
+} Square;
+
+typedef struct {
         Colour current_colour;
         Colour target_colour;
         Colour start_colour;

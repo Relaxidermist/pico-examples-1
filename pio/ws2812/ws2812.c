@@ -32,7 +32,7 @@ const int PIN_TX = 0;
 
 void write_panel()
 {
-    for(int i = 0; i < ROWS * COLUMNS; i++)
+    for(int i = 0; i < ROWS_IMAGE * COLUMNS_IMAGE; i++)
     {
         put_pixel(flattened_data[i]);
     }
@@ -51,8 +51,10 @@ int main() {
     ws2812_program_init(pio, sm, offset, PIN_TX, 800000, false);
 
     while (1) {
-        init_test_image_diagonal();
-        prepare_data_for_panel();
+        //squares_image();
+        test_image_horizontal();
+        //test_image_vertical();
+        prepare_data_for_screen();
         write_panel();
         sleep_ms(10);
         }
