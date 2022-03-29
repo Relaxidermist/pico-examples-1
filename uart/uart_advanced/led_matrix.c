@@ -1,9 +1,22 @@
 #include "pico/stdlib.h"
 #include "led_matrix.h"
-#include "led_ring_dots.h"
+#include "hardware/uart.h"
+
+#define UART_ID uart1
+#define BAUD_RATE 115200
+#define DATA_BITS 8
+#define STOP_BITS 1
+#define PARITY    UART_PARITY_NONE
+
+// We are using pins 0 and 1, but see the GPIO function select table in the
+// datasheet for information on which other pins can be used.
+#define UART_TX_PIN 4
+#define UART_RX_PIN 5
+
 
 uint32_t image[ROWS_IMAGE][COLUMNS_IMAGE];
 uint32_t flattened_data[ROWS_IMAGE * COLUMNS_IMAGE];
+extern uint8_t buffered_chars[3072];
 
 
 void init_blank_image()
@@ -15,6 +28,55 @@ void init_blank_image()
             image[i][j] = 0;
         }
     }
+}
+
+void image_from_uart()
+{
+    static bool initialized = false;
+
+        // Set up our UART with the required speed.
+    if(!initialized){
+        
+        uart_init(UART_ID, BAUD_RATE);
+
+        // Set the TX and RX pins by using the function select on the GPIO
+        // Set datasheet for more information on function select
+        gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
+        gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
+
+        // Turn off FIFO's - we want to do this character by character
+        // uart fifo is 16 bytes deep
+        uart_set_fifo_enabled(UART_ID, false);
+
+        initialized = true;
+    }
+    static Colour pixel;
+    static uint8_t read_buffer[ROWS_IMAGE * COLUMNS_IMAGE * 3];
+    uart_read_blocking(UART_ID, read_buffer, sizeof(read_buffer) - 1);
+
+    int j = 0;
+    int k = 0;
+
+    for(int i = 0; i < sizeof(read_buffer); i+=3)
+    {
+        pixel.red = read_buffer[i];
+        pixel.green = read_buffer[i + 1];
+        pixel.blue = read_buffer[i + 2];
+
+        image[j][k] =  (uint32_t)((pixel.green) << 16) |
+                        (uint32_t)((pixel.red) << 8) |
+                        (uint32_t)((pixel.blue));
+
+        j++;
+
+        if((j % ROWS_IMAGE) == 0){
+            k++;
+        }
+
+
+    }
+           
+    
 }
 
 
@@ -33,7 +95,7 @@ void init_test_image()
 
 void squares_image()
 {
-    static Square square_one = {5, 5, {0,0}, RED};
+    static Square square_one = {32, 5, {0,0}, RED};
 
     for(int i = 0; i < ROWS_IMAGE; i++)
     {
@@ -51,6 +113,36 @@ void squares_image()
         }
     }
 }
+
+
+void process_read_buffer() 
+{
+    Colour pixel;
+
+    int i = 0;
+    char str[20];
+    char str2[20];
+
+    for(int k = 0; k < ROWS_IMAGE; k++)
+    {
+        for(int j = 0; j < COLUMNS_IMAGE; j++)
+        {
+            sprintf(str, "k %d, j %d : R %d G %d B %d ", k, j, buffered_chars[i], buffered_chars[i + 1], buffered_chars[i + 2]);
+            uart_puts(UART_ID, str);
+            pixel.red = buffered_chars[i++];
+            pixel.green = buffered_chars[i++];
+            pixel.blue = buffered_chars[i++];
+
+            image[j][k] =  (uint32_t)((pixel.green) << 16) |
+                            (uint32_t)((pixel.red) << 8) |
+                            (uint32_t)((pixel.blue));
+
+            sprintf(str2, "pix = %d\n", image[j][k]);
+            uart_puts(UART_ID, str2);
+        }
+    }
+}
+
 
 void test_image_horizontal()
 {
@@ -149,55 +241,32 @@ void prepare_data_for_panel()
 }
 
 
-void prepare_data_for_panel1(int panel_no, int screen)
+void prepare_data_for_panel2(int panel_no)
 {
     bool flip_row = true;
 
     int col_offset = (COLUMNS_PANEL * panel_no);
     int offset = COLUMNS_PANEL * ROWS_PANEL * panel_no;
 
-    if(screen == 1)
+    for (int i = 0; i < ROWS_PANEL; i++)
     {
-        for (int i = 0; i < ROWS_PANEL; i++)
-        {
-            flip_row = !flip_row;
+        flip_row = !flip_row;
 
-            if(flip_row)
-            {   
-                for(int j = 0; j < COLUMNS_PANEL; j++)
-                {
-                    flattened_data[(i * (COLUMNS_PANEL) + ((COLUMNS_PANEL - 1) - j) + offset)] = image[i][j + col_offset];
-                }
-                
-            } else {
-                for(int j = 0; j < COLUMNS_PANEL; j++)
-                {
-                    flattened_data[(i * COLUMNS_PANEL) + j + offset] = image[i][j + col_offset];
-                }
+        if(flip_row)
+        {   
+            for(int j = 0; j < COLUMNS_PANEL; j++)
+            {
+                flattened_data[(i * (COLUMNS_PANEL) + ((COLUMNS_PANEL - 1) - j) + offset)] = image[i][j + col_offset];
             }
-        }
-    }
-
-    if(screen == 2)
-    {
-        for (int i = 0; i < ROWS_PANEL; i++)
-        {
-            flip_row = !flip_row;
-
-            if(flip_row)
-            {   
-                for(int j = 0; j < COLUMNS_PANEL; j++)
-                {
-                    flattened_data[(i * (COLUMNS_PANEL) + ((COLUMNS_PANEL - 1) - j) + offset)] = image[i][j + col_offset];
-                }
-                
-            } else {
-                for(int j = 0; j < COLUMNS_PANEL; j++)
-                {
-                    flattened_data[(i * COLUMNS_PANEL) + j + offset] = image[i][j + col_offset];
-                }
+            
+        } else {
+            for(int j = 0; j < COLUMNS_PANEL; j++)
+            {
+                flattened_data[(i * COLUMNS_PANEL) + j + offset] = image[i][j + col_offset];
             }
+
         }
+
     }
 }
 
@@ -275,11 +344,8 @@ void test_image_vertical()
 
 void prepare_data_for_screen()
 {
-    for(int j = 1; j < 3; j++)
+    for(int i = 0; i < PANELS; i++)
     {
-        for(int i = 0; i < PANELS; i++)
-        {
-            prepare_data_for_panel1(i, j);
-        }
+        prepare_data_for_panel2(i);
     }
 }
