@@ -50,12 +50,15 @@ int main() {
 
     ws2812_program_init(pio, sm, offset, PIN_TX, 800000, false);
 
+    bool toggle = false;
+
     while (1) {
         //squares_image();
-        test_image_horizontal();
+        //test_image_horizontal();
+        init_test_image(0xffffff);
         //test_image_vertical();
         prepare_data_for_screen();
         write_panel();
-        sleep_ms(1);
+        //sleep_ms(1);
         }
 }
