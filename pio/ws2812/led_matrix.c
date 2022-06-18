@@ -109,7 +109,7 @@ void test_image_horizontal()
     static Colour finish = GREEN;
 
     static uint8_t start_row = 0;
-    static uint8_t finish_row = 31;
+    static uint8_t finish_row = ROWS_IMAGE - 1;
 
     Colour pixel;
     Colour gradient_one, gradient_two;

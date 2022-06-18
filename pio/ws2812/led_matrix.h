@@ -1,12 +1,12 @@
 #include "pico/stdlib.h"
 
 #define ROWS_IMAGE 32
-#define COLUMNS_IMAGE 32
+#define COLUMNS_IMAGE 64
 
 #define ROWS_PANEL 32
 #define COLUMNS_PANEL 8
 
-#define PANELS 4
+#define PANELS 8
 #define VERTICAL 1
 
 // Colours
