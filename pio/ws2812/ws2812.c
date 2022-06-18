@@ -13,7 +13,6 @@
 #include "hardware/clocks.h"
 #include "ws2812.pio.h"
 #include "led_matrix.h"
-#include "numbers.h"
 
 extern uint32_t flattened_data[];
 
@@ -51,9 +50,7 @@ int main() {
     ws2812_program_init(pio, sm, offset, PIN_TX, 800000, false);
 
     while (1) {
-        //squares_image();
         test_image_horizontal();
-        //init_test_image(0xffffff);
         test_image_vertical();
         prepare_data_for_screen();
         write_panel();

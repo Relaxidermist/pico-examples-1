@@ -1,6 +1,6 @@
 #include "pico/stdlib.h"
 #include "led_matrix.h"
-#include "led_ring_dots.h"
+//#include "led_ring_dots.h"
 #include <string.h>
 
 uint32_t image[ROWS_IMAGE][COLUMNS_IMAGE];
@@ -26,27 +26,6 @@ void init_test_image(uint32_t pixel)
         for(int j = 0; j < COLUMNS_IMAGE; j++)
         {
             image[i][j] = pixel;
-        }
-    }
-}
-
-void squares_image()
-{
-    static Square square_one = {5, 5, {0,0}, RED};
-
-    for(int i = 0; i < ROWS_IMAGE; i++)
-    {
-        for(int j = 0; j < COLUMNS_IMAGE; j++)
-        {
-            if(((i >= square_one.origin.x) &&  \
-            (i <= (square_one.origin.x + square_one.width))) &&  \
-            ((j >= square_one.origin.y) && \
-            (j <= (square_one.origin.y + square_one.height))))
-            {
-                image[i][j] = 0xffffff;
-            } else {
-                image[i][j] = 0;
-            }
         }
     }
 }

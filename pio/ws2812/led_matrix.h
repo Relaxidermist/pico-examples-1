@@ -9,6 +9,11 @@
 #define PANELS 4
 #define VERTICAL 1
 
+// Colours
+#define RED     {255,0,0}
+#define BLUE   {0,255,0}
+#define GREEN    {0,0,255}
+
 extern uint32_t image[ROWS_IMAGE][COLUMNS_IMAGE];
 extern uint32_t flattened_data[ROWS_IMAGE * COLUMNS_IMAGE];
 
@@ -19,6 +24,12 @@ void test_image_horizontal();
 void test_image_vertical();
 void prepare_data_for_panel();
 void prepare_data_for_panel1(int panel);
-//void prepare_data_for_panel2(int panel);
 void prepare_data_for_screen();
 void squares_image();
+
+typedef struct {
+        uint8_t red;
+        uint8_t blue;
+        uint8_t green;
+} Colour;
+
