@@ -17,10 +17,21 @@
 #include "tetromino.h"
 
 extern uint32_t flattened_data[];
+extern uint8_t tetromino_idx;
 const void *p_data = &flattened_data;
 uint32_t received_data[ROWS_IMAGE * COLUMNS_IMAGE];
 queue_t q;
 const int PIN_TX = 0;
+
+void (*tetrominos[7])(uint8_t) = {
+    tetromino_i_1,
+    tetromino_j_1,
+    tetromino_l_1,
+    tetromino_o_1,
+    tetromino_s_1,
+    tetromino_t_1,
+    tetromino_z_1
+};
 
 static inline void put_pixel(uint32_t pixel_grb) {
     pio_sm_put_blocking(pio0, 0, pixel_grb << 8u);
@@ -42,10 +53,8 @@ void image_processing_core1() {
 
     while(1){
         init_blank_image();
-        //tetromino_i_1(5);
-        //tetromino_o_1(7);
-        tetromino_s_1(9);
         //test_image_horizontal();
+        tetrominos[tetromino_idx](9);
         prepare_data_for_screen();
         queue_add_blocking(&q, p_data);
     }
