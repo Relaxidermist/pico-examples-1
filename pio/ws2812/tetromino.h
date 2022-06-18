@@ -6,3 +6,5 @@
 void initialize_gravity();
 void gravity();
 void tetromino_i_1(uint8_t pos_y);
+void tetromino_o_1(uint8_t pos_y);
+void tetromino_s_1(uint8_t pos_y);

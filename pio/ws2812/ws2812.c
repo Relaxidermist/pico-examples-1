@@ -42,7 +42,9 @@ void image_processing_core1() {
 
     while(1){
         init_blank_image();
-        tetromino_i_1(5);
+        //tetromino_i_1(5);
+        //tetromino_o_1(7);
+        tetromino_s_1(9);
         //test_image_horizontal();
         prepare_data_for_screen();
         queue_add_blocking(&q, p_data);

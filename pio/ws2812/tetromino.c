@@ -20,6 +20,46 @@ void tetromino_i_1(uint8_t pos_x){
     }
 }
 
+void tetromino_o_1(uint8_t pos_x){
+
+    Colour pixel = YELLOW;
+
+    for (uint8_t i = 0; i < BLOCK_SIZE * 2; i++) {
+        for(uint8_t j = 0; j < BLOCK_SIZE * 2; j++) {
+            image[pos_x + i][pos_y + j] = (uint32_t)((pixel.green) << 16) |
+                    (uint32_t)((pixel.red) << 8) |
+                    (uint32_t)((pixel.blue));
+        }
+    }
+}
+
+void tetromino_s_1(uint8_t pos_x){
+
+    Colour pixel = RED;
+
+    for (uint8_t i = 0; i < BLOCK_SIZE * 2; i++) {
+        for(uint8_t j = 0; j < BLOCK_SIZE * 1; j++) {
+
+            uint8_t x_offset = BLOCK_SIZE;
+
+            image[pos_x + i + x_offset][pos_y + j] = (uint32_t)((pixel.green) << 16) |
+                    (uint32_t)((pixel.red) << 8) |
+                    (uint32_t)((pixel.blue));
+        }
+    }
+
+    for (uint8_t i = 0; i < BLOCK_SIZE * 2; i++) {
+        for(uint8_t j = 0; j < BLOCK_SIZE * 1; j++) {
+
+            uint8_t y_offset = BLOCK_SIZE;
+
+            image[pos_x + i][pos_y + j + y_offset] = (uint32_t)((pixel.green) << 16) |
+                    (uint32_t)((pixel.red) << 8) |
+                    (uint32_t)((pixel.blue));
+        }
+    }
+}
+
 void initialize_gravity() {
     // get user inputs here
     // some function to move/rotate tetrominos
