@@ -1,6 +1,5 @@
 #include "pico/stdlib.h"
 #include "led_matrix.h"
-//#include "led_ring_dots.h"
 #include <string.h>
 
 uint32_t image[ROWS_IMAGE][COLUMNS_IMAGE];
@@ -263,7 +262,7 @@ void test_image_vertical()
     static Colour finish = GREEN;
 
     static uint8_t start_row = 0;
-    static uint8_t finish_row = 23;
+    static uint8_t finish_row = 31;
 
     Colour pixel;
     Colour gradient_one, gradient_two;

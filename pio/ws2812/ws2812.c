@@ -9,50 +9,63 @@
 #include <math.h>
 
 #include "pico/stdlib.h"
+#include "pico/multicore.h"
+#include "pico/util/queue.h"
 #include "hardware/pio.h"
 #include "hardware/clocks.h"
 #include "ws2812.pio.h"
 #include "led_matrix.h"
 
 extern uint32_t flattened_data[];
+const void *p_data = &flattened_data;
+uint32_t received_data[ROWS_IMAGE * COLUMNS_IMAGE];
+queue_t q;
+const int PIN_TX = 0;
 
 static inline void put_pixel(uint32_t pixel_grb) {
     pio_sm_put_blocking(pio0, 0, pixel_grb << 8u);
 }
 
-static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b) {
-    return
-            ((uint32_t) (r) << 8) |
-            ((uint32_t) (g) << 16) |
-            (uint32_t) (b);
-}
-
-const int PIN_TX = 0;
-
-void write_panel()
+void write_panel(uint32_t *received_data)
 {
     for(int i = 0; i < ROWS_IMAGE * COLUMNS_IMAGE; i++)
     {
-        put_pixel(flattened_data[i]);
+        put_pixel(received_data[i]);
     }
 }
 
-int main() {
-    //set_sys_clock_48();
-    stdio_init_all();
-    puts("WS2812 Smoke Test");
+void image_processing_core1() {
 
-    // todo get free sm
+    queue_init(&q, sizeof(uint32_t) * ROWS_IMAGE * COLUMNS_IMAGE, 1);
+
+    while(1){
+        test_image_horizontal();
+        prepare_data_for_screen();
+        queue_add_blocking(&q, p_data);
+    }
+}
+
+
+int main() {
+
+    sleep_ms(5000);
+
+    stdio_init_all();
+
     PIO pio = pio0;
     int sm = 0;
     uint offset = pio_add_program(pio, &ws2812_program);
 
     ws2812_program_init(pio, sm, offset, PIN_TX, 800000, false);
 
+    multicore_launch_core1(image_processing_core1);
+
     while (1) {
-        test_image_horizontal();
-        test_image_vertical();
-        prepare_data_for_screen();
-        write_panel();
+        queue_remove_blocking(&q, received_data);   
+        write_panel(received_data);
+        sleep_us(500);
         }
 }
+
+
+
