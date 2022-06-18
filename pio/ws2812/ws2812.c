@@ -14,7 +14,7 @@
 #include "hardware/pio.h"
 #include "hardware/clocks.h"
 #include "ws2812.pio.h"
-#include "led_matrix.h"
+#include "tetromino.h"
 
 extern uint32_t flattened_data[];
 const void *p_data = &flattened_data;
@@ -38,8 +38,12 @@ void image_processing_core1() {
 
     queue_init(&q, sizeof(uint32_t) * ROWS_IMAGE * COLUMNS_IMAGE, 1);
 
+    initialize_gravity();
+
     while(1){
-        test_image_horizontal();
+        init_blank_image();
+        tetromino_i_1(5);
+        //test_image_horizontal();
         prepare_data_for_screen();
         queue_add_blocking(&q, p_data);
     }
@@ -47,8 +51,6 @@ void image_processing_core1() {
 
 
 int main() {
-
-    sleep_ms(5000);
 
     stdio_init_all();
 

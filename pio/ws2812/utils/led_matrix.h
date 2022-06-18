@@ -1,3 +1,5 @@
+#define LED_MATRIX_H
+
 #include "pico/stdlib.h"
 
 #define ROWS_IMAGE 32
@@ -13,6 +15,7 @@
 #define RED     {255,0,0}
 #define BLUE   {0,255,0}
 #define GREEN    {0,0,255}
+#define CYAN    {0,255,255}
 
 extern uint32_t image[ROWS_IMAGE][COLUMNS_IMAGE];
 extern uint32_t flattened_data[ROWS_IMAGE * COLUMNS_IMAGE];
