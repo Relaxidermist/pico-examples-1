@@ -247,7 +247,7 @@ void prepare_data_for_panel1(int panel_no)
         }
     }
 }
-
+/*
 void prepare_data_for_panel2(int panel_no)
 {
     bool flip_row = true;   // Should the row be flipped? This is inverted every row
@@ -274,7 +274,7 @@ void prepare_data_for_panel2(int panel_no)
         }
     }
 }
-
+*/
 
 
 void test_image_vertical()
@@ -352,10 +352,5 @@ void prepare_data_for_screen()
     for(int i = 0; i < PANELS; i++)
     {
         prepare_data_for_panel1(i);
-    }
-
-    for(int i = 0; i < PANELS; i++)
-    {
-        prepare_data_for_panel2(i);
     }
 }
