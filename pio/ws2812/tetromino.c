@@ -6,6 +6,7 @@ extern uint32_t image[ROWS_IMAGE][COLUMNS_IMAGE];
 uint8_t pos_y = 0;
 repeating_timer_t timer;
 uint8_t tetromino_idx = 0;
+enum tetromino_rotations rotation = rotation_0_degrees;
 
 
 void tetromino_i(uint8_t pos_x, enum tetromino_rotations rotation){
@@ -234,10 +235,105 @@ void tetromino_t(uint8_t pos_x, enum tetromino_rotations rotation){
             }
             break;
         case rotation_90_degrees:
+            for(uint8_t i = 0; i < BLOCK_SIZE; i++) {
+                for(uint8_t j = 0; j < BLOCK_SIZE; j++) {
+
+                    uint8_t x_offset = BLOCK_SIZE;
+
+                    image[pos_x + i + x_offset][pos_y + j] = (uint32_t)((pixel.green) << 16) |
+                            (uint32_t)((pixel.red) << 8) |
+                            (uint32_t)((pixel.blue));
+                }
+            }
+            for(uint8_t i = 0; i < BLOCK_SIZE * 2; i++) {
+                for(uint8_t j = 0; j < BLOCK_SIZE * 1; j++) {
+
+                    uint8_t x_offset = BLOCK_SIZE;
+                    uint8_t y_offset = BLOCK_SIZE;
+
+                    image[pos_x + i + x_offset][pos_y + j + y_offset] = (uint32_t)((pixel.green) << 16) |
+                            (uint32_t)((pixel.red) << 8) |
+                            (uint32_t)((pixel.blue));
+                }
+            }
+            for(uint8_t i = 0; i < BLOCK_SIZE * 1; i++) {
+                for(uint8_t j = 0; j < BLOCK_SIZE * 1; j++) {
+
+                    uint8_t x_offset = BLOCK_SIZE;
+                    uint8_t y_offset = BLOCK_SIZE * 2;
+
+                    image[pos_x + i + x_offset][pos_y + j + y_offset] = (uint32_t)((pixel.green) << 16) |
+                            (uint32_t)((pixel.red) << 8) |
+                            (uint32_t)((pixel.blue));
+                }
+            }
             break;
         case rotation_180_degrees:
+            for(uint8_t i = 0; i < BLOCK_SIZE * 3; i++) {
+                for(uint8_t j = 0; j < BLOCK_SIZE; j++) {
+
+                    uint8_t y_offset = BLOCK_SIZE;
+
+                    image[pos_x + i][pos_y + j + y_offset] = (uint32_t)((pixel.green) << 16) |
+                            (uint32_t)((pixel.red) << 8) |
+                            (uint32_t)((pixel.blue));
+                }
+            }
+            for(uint8_t i = 0; i < BLOCK_SIZE; i++) {
+                for(uint8_t j = 0; j < BLOCK_SIZE; j++) {
+
+                    uint8_t x_offset = BLOCK_SIZE;
+                    uint8_t y_offset = BLOCK_SIZE * 2;
+
+                    image[pos_x + i + x_offset][pos_y + j + y_offset] = (uint32_t)((pixel.green) << 16) |
+                            (uint32_t)((pixel.red) << 8) |
+                            (uint32_t)((pixel.blue));
+                }
+            }
+            for(uint8_t i = 0; i < BLOCK_SIZE * 1; i++) {
+                for(uint8_t j = 0; j < BLOCK_SIZE * 1; j++) {
+
+                    uint8_t x_offset = BLOCK_SIZE;
+                    uint8_t y_offset = BLOCK_SIZE * 2;
+
+                    image[pos_x + i + x_offset][pos_y + j + y_offset] = (uint32_t)((pixel.green) << 16) |
+                            (uint32_t)((pixel.red) << 8) |
+                            (uint32_t)((pixel.blue));
+                }
+            }
             break;
         case rotation_270_degrees:
+            for(uint8_t i = 0; i < BLOCK_SIZE; i++) {
+                for(uint8_t j = 0; j < BLOCK_SIZE; j++) {
+
+                    uint8_t x_offset = BLOCK_SIZE;
+
+                    image[pos_x + i + x_offset][pos_y + j] = (uint32_t)((pixel.green) << 16) |
+                            (uint32_t)((pixel.red) << 8) |
+                            (uint32_t)((pixel.blue));
+                }
+            }
+            for(uint8_t i = 0; i < BLOCK_SIZE * 2; i++) {
+                for(uint8_t j = 0; j < BLOCK_SIZE * 1; j++) {
+
+                    uint8_t y_offset = BLOCK_SIZE;
+
+                    image[pos_x + i][pos_y + j + y_offset] = (uint32_t)((pixel.green) << 16) |
+                            (uint32_t)((pixel.red) << 8) |
+                            (uint32_t)((pixel.blue));
+                }
+            }
+            for(uint8_t i = 0; i < BLOCK_SIZE * 1; i++) {
+                for(uint8_t j = 0; j < BLOCK_SIZE * 1; j++) {
+
+                    uint8_t x_offset = BLOCK_SIZE;
+                    uint8_t y_offset = BLOCK_SIZE * 2;
+
+                    image[pos_x + i + x_offset][pos_y + j + y_offset] = (uint32_t)((pixel.green) << 16) |
+                            (uint32_t)((pixel.red) << 8) |
+                            (uint32_t)((pixel.blue));
+                }
+            }
             break;
     }
 }
@@ -250,6 +346,11 @@ void initialize_gravity() {
 
 void gravity() {
     pos_y+=BLOCK_SIZE;
+    // rotation test hack
+    rotation++;
+    if(rotation > rotation_270_degrees){
+        rotation = rotation_0_degrees;
+    }
     if(pos_y >= 50) {
         if(tetromino_idx == 6) {
             tetromino_idx = 0;

@@ -22,6 +22,7 @@ const void *p_data = &flattened_data;
 uint32_t received_data[ROWS_IMAGE * COLUMNS_IMAGE];
 queue_t q;
 const int PIN_TX = 0;
+extern enum tetromino_rotations rotation;
 
 void (*tetrominos[7])(uint8_t, enum tetromino_rotations) = {
     tetromino_i,
@@ -54,7 +55,7 @@ void image_processing_core1() {
     while(1){
         init_blank_image();
         //test_image_horizontal();
-        tetrominos[tetromino_idx](9, rotation_0_degrees);
+        tetrominos[tetromino_idx](9, rotation);
         prepare_data_for_screen();
         queue_add_blocking(&q, p_data);
     }
