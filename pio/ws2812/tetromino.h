@@ -5,10 +5,10 @@
 
 void initialize_gravity();
 void gravity();
-void tetromino_i_1(uint8_t pos_y);
-void tetromino_o_1(uint8_t pos_y);
-void tetromino_s_1(uint8_t pos_y);
-void tetromino_z_1(uint8_t pos_y);
-void tetromino_j_1(uint8_t pos_y);
-void tetromino_l_1(uint8_t pos_y);
-void tetromino_t_1(uint8_t pos_y);
+void tetromino_i(uint8_t pos_y, uint8_t rotation);
+void tetromino_o(uint8_t pos_y, uint8_t rotation);
+void tetromino_s(uint8_t pos_y, uint8_t rotation);
+void tetromino_z(uint8_t pos_y, uint8_t rotation);
+void tetromino_j(uint8_t pos_y, uint8_t rotation);
+void tetromino_l(uint8_t pos_y, uint8_t rotation);
+void tetromino_t(uint8_t pos_y, uint8_t rotation);

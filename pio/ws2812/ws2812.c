@@ -23,14 +23,14 @@ uint32_t received_data[ROWS_IMAGE * COLUMNS_IMAGE];
 queue_t q;
 const int PIN_TX = 0;
 
-void (*tetrominos[7])(uint8_t) = {
-    tetromino_i_1,
-    tetromino_j_1,
-    tetromino_l_1,
-    tetromino_o_1,
-    tetromino_s_1,
-    tetromino_t_1,
-    tetromino_z_1
+void (*tetrominos[7])(uint8_t, uint8_t) = {
+    tetromino_i,
+    tetromino_j,
+    tetromino_l,
+    tetromino_o,
+    tetromino_s,
+    tetromino_t,
+    tetromino_z,
 };
 
 static inline void put_pixel(uint32_t pixel_grb) {
@@ -54,7 +54,7 @@ void image_processing_core1() {
     while(1){
         init_blank_image();
         //test_image_horizontal();
-        tetrominos[tetromino_idx](9);
+        tetrominos[tetromino_idx](9, 1);
         prepare_data_for_screen();
         queue_add_blocking(&q, p_data);
     }

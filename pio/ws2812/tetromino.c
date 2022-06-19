@@ -8,7 +8,7 @@ repeating_timer_t timer;
 uint8_t tetromino_idx = 0;
 
 
-void tetromino_i_1(uint8_t pos_x){
+void tetromino_i(uint8_t pos_x, uint8_t rotation){
 
     Colour pixel = CYAN;
 
@@ -21,7 +21,7 @@ void tetromino_i_1(uint8_t pos_x){
     }
 }
 
-void tetromino_o_1(uint8_t pos_x){
+void tetromino_o(uint8_t pos_x, uint8_t rotation){
 
     Colour pixel = YELLOW;
 
@@ -34,7 +34,7 @@ void tetromino_o_1(uint8_t pos_x){
     }
 }
 
-void tetromino_s_1(uint8_t pos_x){
+void tetromino_s(uint8_t pos_x, uint8_t rotation){
 
     Colour pixel = GREEN;
 
@@ -61,7 +61,7 @@ void tetromino_s_1(uint8_t pos_x){
     }
 }
 
-void tetromino_z_1(uint8_t pos_x){
+void tetromino_z(uint8_t pos_x, uint8_t rotation){
 
     Colour pixel = RED;
 
@@ -88,7 +88,7 @@ void tetromino_z_1(uint8_t pos_x){
 }
 
 
-void tetromino_j_1(uint8_t pos_x){
+void tetromino_j(uint8_t pos_x, uint8_t rotation){
 
     Colour pixel = BLUE;
 
@@ -114,7 +114,7 @@ void tetromino_j_1(uint8_t pos_x){
 }
 
 
-void tetromino_l_1(uint8_t pos_x){
+void tetromino_l(uint8_t pos_x, uint8_t rotation){
 
     Colour pixel = ORANGE;
 
@@ -141,7 +141,7 @@ void tetromino_l_1(uint8_t pos_x){
     }
 }
 
-void tetromino_t_1(uint8_t pos_x){
+void tetromino_t(uint8_t pos_x, uint8_t rotation){
 
     Colour pixel = PURPLE;
 
