@@ -1,67 +1,39 @@
 
 #include "tetromino.h"
 #include "pico/stdlib.h"
+#include <string.h>
 
 extern uint32_t image[ROWS_IMAGE][COLUMNS_IMAGE];
 uint8_t pos_y = 0;
 repeating_timer_t timer;
 uint8_t tetromino_idx = 0;
 enum tetromino_rotations rotation = rotation_0_degrees;
+extern const uint32_t tetrimino_i_rot0[][4* BLOCK_SIZE];
 
 
 void tetromino_i(uint8_t pos_x, enum tetromino_rotations rotation){
 
-    Colour pixel = CYAN;
-
     switch(rotation) {
         case rotation_0_degrees:
-            for (uint8_t i = 0; i < BLOCK_SIZE; i++) {
-                for(uint8_t j = 0; j < BLOCK_SIZE * 4; j++) {
-
-                    uint8_t x_offset = BLOCK_SIZE * 2;
-
-                    image[pos_x + i + x_offset][pos_y + j] = (uint32_t)((pixel.green) << 16) |
-                            (uint32_t)((pixel.red) << 8) |
-                            (uint32_t)((pixel.blue));
-                }
+            for(uint i = 0; i < 4 * BLOCK_SIZE; i++) {
+                memcpy(&image[pos_x + i][pos_y], &tetrimino_i_rot0[i], 4 * BLOCK_SIZE * sizeof(uint32_t));
             }
             break;
         case rotation_90_degrees:
-            for (uint8_t i = 0; i < BLOCK_SIZE * 4; i++) {
-                for(uint8_t j = 0; j < BLOCK_SIZE; j++) {
-
-                    uint8_t y_offset = BLOCK_SIZE * 2;
-
-                    image[pos_x + i][pos_y + j + y_offset] = (uint32_t)((pixel.green) << 16) |
-                            (uint32_t)((pixel.red) << 8) |
-                            (uint32_t)((pixel.blue));
-                }
+            for(uint i = 0; i < 4 * BLOCK_SIZE; i++) {
+                memcpy(&image[pos_x + i][pos_y], &tetrimino_i_rot1[i], 4 * BLOCK_SIZE * sizeof(uint32_t));
             }
             break;
         case rotation_180_degrees:
-            for (uint8_t i = 0; i < BLOCK_SIZE; i++) {
-                for(uint8_t j = 0; j < BLOCK_SIZE * 4; j++) {
-
-                    uint8_t x_offset = BLOCK_SIZE * 2;
-
-                    image[pos_x + i + x_offset][pos_y + j] = (uint32_t)((pixel.green) << 16) |
-                            (uint32_t)((pixel.red) << 8) |
-                            (uint32_t)((pixel.blue));
-                }
+            for(uint i = 0; i < 4 * BLOCK_SIZE; i++) {
+                memcpy(&image[pos_x + i][pos_y], &tetrimino_i_rot0[i], 4 * BLOCK_SIZE * sizeof(uint32_t));
             }
             break;
         case rotation_270_degrees:
-            for (uint8_t i = 0; i < BLOCK_SIZE * 4; i++) {
-                for(uint8_t j = 0; j < BLOCK_SIZE; j++) {
-
-                    uint8_t y_offset = BLOCK_SIZE * 2;
-
-                    image[pos_x + i][pos_y + j + y_offset] = (uint32_t)((pixel.green) << 16) |
-                            (uint32_t)((pixel.red) << 8) |
-                            (uint32_t)((pixel.blue));
-                }
+            for(uint i = 0; i < 4 * BLOCK_SIZE; i++) {
+                memcpy(&image[pos_x + i][pos_y], &tetrimino_i_rot1[i], 4 * BLOCK_SIZE * sizeof(uint32_t));
             }
-            break;            
+            break;          
     }
 }
 

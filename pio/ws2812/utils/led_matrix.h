@@ -1,5 +1,3 @@
-#define LED_MATRIX_H
-
 #include "pico/stdlib.h"
 
 #define ROWS_IMAGE 32
@@ -12,6 +10,10 @@
 #define VERTICAL 1
 
 // Colours
+#define NONE_INT    0x0
+#define CYAN_INT    0x4B004B
+
+
 #define RED     {75,0,0}
 #define BLUE   {0,75,0}
 #define GREEN    {0,0,75}
